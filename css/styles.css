@@ -519,10 +519,10 @@ h5 { font-size: 1rem; }
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-cyan) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-primary);
+}
+.light-mode .gradient-text {
+  color: #00aa2e;
 }
 
 .hero-title {

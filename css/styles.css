@@ -465,6 +465,7 @@ h5 { font-size: 1rem; }
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  flex: none;
 }
 
 /* Grid overlay */
@@ -515,6 +516,13 @@ h5 { font-size: 1rem; }
 .light-mode .hero-badge {
   background: rgba(5,150,105,0.1);
   border-color: rgba(5,150,105,0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-title {
@@ -2124,7 +2132,8 @@ h5 { font-size: 1rem; }
   }
 
   .filter-bar {
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .filter-group {
@@ -2441,6 +2450,8 @@ h5 { font-size: 1rem; }
   overflow: hidden;
   font-size: 0;
   line-height: 0;
+  color: transparent;
+  flex-shrink: 0;
 }
 .step-dot.active {
   background: var(--accent-primary);
@@ -2453,6 +2464,8 @@ h5 { font-size: 1rem; }
   display: flex;
   gap: 0.75rem;
   align-items: center;
+  flex-wrap: nowrap;
+  margin-left: auto;
 }
 .results-meta {
   display: flex;

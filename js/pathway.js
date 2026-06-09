@@ -1,226 +1,311 @@
-// CyberCerts - Pathway Builder JS
+// CyberCerts – Pathway Builder
+'use strict';
 
-const PATHWAYS = {
-  'blue-team': { name:'Blue Team / SOC', color:'#00ff41', icon:'🛡️',
-    levels:['beginner','intermediate','advanced','expert'],
-    desc:'Start with Security+ or CompTIA CySA+ and build toward CISSP or GCIA.' },
-  'red-team': { name:'Red Team / Pentesting', color:'#ff3e3e', icon:'⚔️',
-    levels:['beginner','intermediate','advanced','expert'],
-    desc:'Begin with eJPT or CEH, advance through OSCP to GXPN or OSCE3.' },
-  'cloud': { name:'Cloud Security', color:'#0080ff', icon:'☁️',
-    levels:['beginner','intermediate','advanced'],
-    desc:'CCSK and cloud provider fundamentals lead to CCSP and specialty certs.' },
-  'grc': { name:'GRC & Compliance', color:'#9d4edd', icon:'📋',
-    levels:['beginner','intermediate','advanced','expert'],
-    desc:'CompTIA Security+ to CISM to CISSP, with CISA for audit focus.' },
-  'dfir': { name:'Digital Forensics & IR', color:'#ff6b35', icon:'🔍',
-    levels:['intermediate','advanced','expert'],
-    desc:'GCIH and GCFE build the foundation; GCFA and GREM for specialization.' },
-  'ai-security': { name:'AI Security', color:'#00f5ff', icon:'🤖',
-    levels:['beginner','intermediate','advanced','expert'],
-    desc:'Start with AIGP or Security AI+, advance to CAISP or GAISA.' },
-  'ics-ot': { name:'ICS/OT Security', color:'#ffd700', icon:'🏭',
-    levels:['intermediate','advanced'],
-    desc:'ISA/IEC 62443 and GICSP form the foundation; GRID for advanced incident response.' },
-  'privacy': { name:'Privacy', color:'#ff69b4', icon:'🔒',
-    levels:['intermediate','advanced'],
-    desc:'CIPP/US or CIPP/E, then CIPM for management or CIPT for technical roles.' },
-  'appsec': { name:'Application Security', color:'#20c997', icon:'💻',
-    levels:['beginner','intermediate','advanced'],
-    desc:'GWEB and eWPT are solid starts; advance to OSWE, GWAPT, or bug bounty certs.' },
-  'threat-intel': { name:'Threat Intelligence', color:'#fd7e14', icon:'🕵️',
-    levels:['intermediate','advanced'],
-    desc:'GCTI and eCTHP for structured threat intelligence careers.' },
+var DOMAIN_META_P = {
+  'blue-team':   { label:'Blue Team',    color:'#00ff41' },
+  'red-team':    { label:'Red Team',     color:'#ff3e3e' },
+  'cloud':       { label:'Cloud',        color:'#0080ff' },
+  'grc':         { label:'GRC',          color:'#9d4edd' },
+  'dfir':        { label:'DFIR',         color:'#ff6b35' },
+  'ai-security': { label:'AI Security',  color:'#00f5ff' },
+  'ics-ot':      { label:'ICS/OT',       color:'#ffd700' },
+  'privacy':     { label:'Privacy',      color:'#ff69b4' },
+  'appsec':      { label:'AppSec',       color:'#7fff00' },
+  'management':  { label:'Management',   color:'#c084fc' },
+  'threat-intel':{ label:'Threat Intel', color:'#fb923c' },
+  'malware':     { label:'Malware',      color:'#ef4444' },
+  'vendor':      { label:'Vendor',       color:'#94a3b8' },
 };
 
+var LEVEL_ORDER = ['beginner','intermediate','advanced','expert','specialty'];
+
+function dColor(d) { return (DOMAIN_META_P[d]||{}).color || '#00f5ff'; }
+function dLabel(d) { return (DOMAIN_META_P[d]||{}).label || d; }
+function lvlLabel(l) { return l ? l.charAt(0).toUpperCase()+l.slice(1) : ''; }
+
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem('ccProgress') || '{}'); } catch(e) { return {}; }
+}
+function setProgressItem(id, val) {
+  var p = getProgress(); p[id] = val;
+  try { localStorage.setItem('ccProgress', JSON.stringify(p)); } catch(e) {}
+}
+
+var wizardState = { experience: null, domain: null, provider: null };
+
 function initPathwayPage() {
-  const wizard = document.getElementById('wizard');
-  if (!wizard) return;
+  var panels = document.querySelectorAll('.wizard-panel');
+  if (!panels.length) return;
 
-  // Check URL for domain
-  const params = new URLSearchParams(window.location.search);
-  const domainParam = params.get('domain');
+  var currentPanel = 0;
+  var totalPanels = panels.length;
 
-  // Render domain cards
-  const domainGrid = document.getElementById('domainGrid');
-  if (domainGrid) {
-    domainGrid.innerHTML = Object.entries(PATHWAYS).map(([id,p]) => {
-      const certCount = CERTS.filter(c=>c.domains.includes(id)).length;
-      return `<div class="domain-select-card" data-domain="${id}" style="--card-color:${p.color}">
-        <div class="dscard-icon">${p.icon}</div>
-        <div class="dscard-name">${p.name}</div>
-        <div class="dscard-count">${certCount} certs</div>
-      </div>`;
-    }).join('');
-
-    domainGrid.addEventListener('click', e => {
-      const card = e.target.closest('.domain-select-card');
-      if (!card) return;
-      domainGrid.querySelectorAll('.domain-select-card').forEach(c=>c.classList.remove('selected'));
-      card.classList.add('selected');
-      selectedDomain = card.dataset.domain;
-      document.getElementById('nextStep1').disabled = false;
+  function showPanel(idx) {
+    panels.forEach(function(p, i) { p.classList.toggle('active', i === idx); });
+    var prevBtn = document.getElementById('wizardPrevBtn');
+    var nextBtn = document.getElementById('wizardNextBtn');
+    if (prevBtn) prevBtn.style.display = idx === 0 ? 'none' : '';
+    if (nextBtn) {
+      if (idx === totalPanels - 1) {
+        nextBtn.innerHTML = '<i class="fas fa-route"></i> Build Pathway';
+      } else {
+        nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+      }
+    }
+    // Update wizard step indicators
+    document.querySelectorAll('.wizard-step').forEach(function(s, i) {
+      s.classList.toggle('active', i === idx);
+      s.classList.toggle('completed', i < idx);
     });
+    currentPanel = idx;
+  }
 
-    if (domainParam && PATHWAYS[domainParam]) {
-      setTimeout(() => {
-        const card = domainGrid.querySelector(`[data-domain="${domainParam}"]`);
-        if (card) { card.click(); goToStep(2); }
-      }, 100);
+  // Option buttons in wizard
+  panels.forEach(function(panel, panelIdx) {
+    panel.querySelectorAll('.option-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        panel.querySelectorAll('.option-btn').forEach(function(b) {
+          b.classList.remove('selected');
+          b.setAttribute('aria-pressed','false');
+        });
+        btn.classList.add('selected');
+        btn.setAttribute('aria-pressed','true');
+        if (panelIdx === 0) wizardState.experience = btn.dataset.value;
+        if (panelIdx === 1) wizardState.domain = btn.dataset.value;
+        if (panelIdx === 2) wizardState.provider = btn.dataset.value;
+      });
+    });
+  });
+
+  document.getElementById('wizardPrevBtn')?.addEventListener('click', function() {
+    if (currentPanel > 0) showPanel(currentPanel - 1);
+  });
+
+  document.getElementById('wizardNextBtn')?.addEventListener('click', function() {
+    if (currentPanel < totalPanels - 1) {
+      showPanel(currentPanel + 1);
+    } else {
+      buildPathway();
+    }
+  });
+
+  // Check URL params
+  var params = new URLSearchParams(window.location.search);
+  var urlDomain = params.get('domain');
+  var urlExp = params.get('exp');
+  if (urlDomain) {
+    wizardState.domain = urlDomain;
+    // Pre-select domain button in panel 2
+    var domainBtn = panels[1] ? panels[1].querySelector('[data-value="' + urlDomain + '"]') : null;
+    if (domainBtn) {
+      domainBtn.classList.add('selected');
+      domainBtn.setAttribute('aria-pressed','true');
     }
   }
+  if (urlExp) {
+    wizardState.experience = urlExp;
+    var expBtn = panels[0] ? panels[0].querySelector('[data-value="' + urlExp + '"]') : null;
+    if (expBtn) { expBtn.classList.add('selected'); expBtn.setAttribute('aria-pressed','true'); }
+  }
 
-  let selectedDomain = domainParam || null;
-  let selectedLevel = null;
+  showPanel(0);
+  renderProgressDashboard();
 
-  // Step navigation
-  window.goToStep = (step) => {
-    document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-    document.getElementById(`wizardStep${step}`).classList.add('active');
-    if (step === 2 && selectedDomain) renderLevelSelector(selectedDomain);
-    if (step === 3 && selectedDomain && selectedLevel) renderPathwayGraph(selectedDomain, selectedLevel);
+  // If both domain and exp pre-selected from URL, auto-build
+  if (urlDomain && urlExp) {
+    setTimeout(buildPathway, 200);
+  }
+}
+
+function buildPathway() {
+  var domain   = wizardState.domain;
+  var exp      = wizardState.experience;
+  var provider = wizardState.provider;
+
+  if (!domain) { alert('Please select a security domain first.'); return; }
+
+  var domainCerts = CERTS.filter(function(c) { return c.domains.includes(domain); });
+
+  // Filter by experience
+  var levelMap = {
+    student:      ['beginner'],
+    beginner:     ['beginner','intermediate'],
+    professional: ['beginner','intermediate','advanced'],
+    senior:       ['intermediate','advanced','expert'],
+    specialist:   ['advanced','expert'],
+    executive:    ['intermediate','advanced','expert'],
+  };
+  var allowedLevels = exp && levelMap[exp] ? levelMap[exp] : LEVEL_ORDER;
+
+  // Sort by level order
+  domainCerts.sort(function(a, b) {
+    return LEVEL_ORDER.indexOf(a.level) - LEVEL_ORDER.indexOf(b.level);
+  });
+
+  // Filter by provider
+  if (provider && provider !== 'all') {
+    var byProv = domainCerts.filter(function(c) { return c.issuer === provider; });
+    if (byProv.length >= 2) domainCerts = byProv;
+  }
+
+  // Hide wizard card, show pathway display
+  var wizardCard = document.querySelector('.wizard-card');
+  if (wizardCard) wizardCard.hidden = true;
+
+  var display = document.getElementById('pathwayDisplay');
+  if (!display) return;
+  display.hidden = false;
+
+  var titleEl = document.getElementById('pathwayTitle');
+  var meta = DOMAIN_META_P[domain] || {};
+  if (titleEl) {
+    titleEl.innerHTML = '<span style="color:' + (meta.color||'#00f5ff') + '">' + (meta.label||domain) + '</span> Certification Pathway';
+  }
+
+  renderPathwayGraph(domainCerts, domain, allowedLevels);
+
+  document.getElementById('exportPathway')?.addEventListener('click', function() { exportPathway(domainCerts); });
+  document.getElementById('resetPathway')?.addEventListener('click', function() {
+    if (display) display.hidden = true;
+    if (wizardCard) wizardCard.hidden = false;
+  });
+  document.getElementById('closeCertPanel')?.addEventListener('click', function() {
+    var panel = document.getElementById('certPanel');
+    if (panel) panel.hidden = true;
+  });
+}
+
+function renderPathwayGraph(certs, domain, allowedLevels) {
+  var graph = document.getElementById('pathwayGraph');
+  if (!graph) return;
+  var progress = getProgress();
+  var accent = dColor(domain);
+
+  // Group by level
+  var byLevel = {};
+  certs.forEach(function(c) {
+    if (!byLevel[c.level]) byLevel[c.level] = [];
+    byLevel[c.level].push(c);
+  });
+
+  var html = '';
+  LEVEL_ORDER.forEach(function(lvl) {
+    var group = byLevel[lvl];
+    if (!group || !group.length) return;
+
+    html += '<div class="pathway-level-group" style="--level-accent:' + accent + '">'
+      + '<div class="pathway-level-label">' + lvlLabel(lvl) + '</div>'
+      + '<div class="pathway-nodes-row">';
+
+    group.forEach(function(cert) {
+      var done = !!progress[cert.id];
+      var cardAccent = dColor(cert.domains[0] || domain);
+      html += '<div class="pathway-node-card ' + (done ? 'completed' : '') + '"'
+        + ' style="--node-accent:' + cardAccent + '"'
+        + ' onclick="showCertPanel(\'' + cert.id + '\')"'
+        + ' role="listitem" tabindex="0"'
+        + ' aria-label="' + cert.name + (done ? ' - completed' : '') + '">'
+        + (cert.isAISecurity ? '<span class="ai-badge" style="position:absolute;top:0.5rem;left:0.5rem;font-size:0.6rem"><i class="fas fa-robot"></i></span>' : '')
+        + '<div class="pathway-node-code">' + cert.code + '</div>'
+        + '<div class="pathway-node-name">' + (cert.name.length > 35 ? cert.name.substring(0,35)+'…' : cert.name) + '</div>'
+        + '<div class="pathway-node-issuer">' + (cert.issuer||'').toUpperCase() + '</div>'
+        + '<button class="pathway-node-check ' + (done ? 'done' : '') + '"'
+        + ' onclick="event.stopPropagation();toggleCertProgress(\'' + cert.id + '\')"'
+        + ' title="' + (done ? 'Mark incomplete' : 'Mark complete') + '" aria-label="' + (done ? 'Mark incomplete' : 'Mark complete') + '">'
+        + (done ? '<i class="fas fa-check"></i>' : '<i class="far fa-circle"></i>')
+        + '</button>'
+        + '</div>';
+    });
+
+    html += '</div></div>';
+    if (LEVEL_ORDER.indexOf(lvl) < LEVEL_ORDER.length - 1) {
+      html += '<div class="pathway-level-arrow"><i class="fas fa-arrow-down"></i></div>';
+    }
+  });
+
+  // Summary
+  var total = certs.length;
+  var done = certs.filter(function(c) { return progress[c.id]; }).length;
+  var pct = total ? Math.round(done / total * 100) : 0;
+  html += '<div class="pathway-progress-bar-wrap">'
+    + '<div class="pathway-progress-bar" style="width:' + pct + '%;background:' + accent + '"></div>'
+    + '</div>'
+    + '<p class="pathway-progress-text">' + done + ' / ' + total + ' completed (' + pct + '%)</p>';
+
+  graph.innerHTML = html;
+
+  // Expose globals for onclick handlers
+  window.showCertPanel = function(id) {
+    var cert = CERTS.find(function(c) { return c.id === id; });
+    if (!cert) return;
+    var panel = document.getElementById('certPanel');
+    var content = document.getElementById('certPanelContent');
+    if (!panel || !content) return;
+    var accent2 = dColor(cert.domains[0] || domain);
+    content.innerHTML = '<div class="cert-panel-header" style="border-left:4px solid ' + accent2 + '">'
+      + '<div class="cert-code">' + cert.code + '</div>'
+      + (cert.isAISecurity ? '<span class="ai-badge"><i class="fas fa-robot"></i> AI Security</span>' : '')
+      + '</div>'
+      + '<h3 style="margin:0.75rem 0 0.25rem">' + cert.name + '</h3>'
+      + '<div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem">' + (cert.issuer||'').toUpperCase() + ' · ' + lvlLabel(cert.level) + '</div>'
+      + '<p style="font-size:0.9rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem">' + (cert.description||'') + '</p>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;font-size:0.85rem">'
+      + '<div><strong>Cost:</strong> $' + (cert.examDetails ? cert.examDetails.cost : '?') + '</div>'
+      + '<div><strong>Validity:</strong> ' + (cert.examDetails ? cert.examDetails.validity : '?') + '</div>'
+      + '<div><strong>Salary:</strong> ' + (cert.salaryRange || '?') + '</div>'
+      + '<div><strong>Format:</strong> ' + (cert.examDetails ? cert.examDetails.format : '?') + '</div>'
+      + '</div>'
+      + '<a href="certification.html?id=' + cert.id + '" class="btn btn-primary" style="width:100%;text-align:center">View Full Details →</a>';
+    panel.hidden = false;
   };
 
-  document.getElementById('nextStep1').addEventListener('click', () => {
-    if (selectedDomain) goToStep(2);
-  });
-
-  // Level selector
-  function renderLevelSelector(domain) {
-    const container = document.getElementById('levelGrid');
-    if (!container) return;
-    const pathway = PATHWAYS[domain];
-    const levels = ['beginner','intermediate','advanced','expert'];
-    const domainCerts = CERTS.filter(c=>c.domains.includes(domain));
-    container.innerHTML = levels.map(lvl => {
-      const count = domainCerts.filter(c=>c.level===lvl).length;
-      if (count === 0) return '';
-      const active = count > 0 ? '' : 'disabled';
-      return `<div class="level-select-card ${active}" data-level="${lvl}" style="--card-color:${LEVEL_COLORS[lvl]}">
-        <div class="lscard-name">${levelLabel(lvl)}</div>
-        <div class="lscard-desc">${getLevelDesc(lvl)}</div>
-        <div class="lscard-count">${count} certs available</div>
-      </div>`;
-    }).join('');
-
-    container.addEventListener('click', e => {
-      const card = e.target.closest('.level-select-card:not(.disabled)');
-      if (!card) return;
-      container.querySelectorAll('.level-select-card').forEach(c=>c.classList.remove('selected'));
-      card.classList.add('selected');
-      selectedLevel = card.dataset.level;
-      document.getElementById('nextStep2').disabled = false;
-    });
-  }
-
-  document.getElementById('nextStep2').addEventListener('click', () => {
-    if (selectedLevel) goToStep(3);
-  });
-
-  function getLevelDesc(lvl) {
-    const map = { beginner:'0-1 years experience', intermediate:'1-3 years experience', advanced:'3-5 years experience', expert:'5+ years experience' };
-    return map[lvl] || '';
-  }
-
-  // Load progress
-  function getProgress() {
-    return JSON.parse(localStorage.getItem('certProgress') || '{}');
-  }
-  function toggleProgress(id) {
-    const p = getProgress();
-    p[id] = !p[id];
-    localStorage.setItem('certProgress', JSON.stringify(p));
-  }
-
-  // Pathway graph
-  function renderPathwayGraph(domain, startLevel) {
-    const container = document.getElementById('pathwayGraph');
-    if (!container) return;
-    const domainCerts = CERTS.filter(c=>c.domains.includes(domain));
-    const progress = getProgress();
-    const levels = ['beginner','intermediate','advanced','expert'];
-    const startIdx = levels.indexOf(startLevel);
-    const visibleLevels = levels.slice(startIdx);
-
-    let html = '<div class="pathway-levels">';
-    visibleLevels.forEach(lvl => {
-      const lvlCerts = domainCerts.filter(c=>c.level===lvl);
-      if (lvlCerts.length === 0) return;
-      html += `<div class="pathway-level">
-        <div class="level-header" style="color:${LEVEL_COLORS[lvl]}">${levelLabel(lvl)}</div>
-        <div class="pathway-nodes">
-          ${lvlCerts.map(c => {
-            const done = progress[c.id];
-            const aiTag = c.isAISecurity ? '<span class="ai-badge-sm">AI</span>' : '';
-            return `<div class="pathway-node ${done?'completed':''}" data-id="${c.id}"
-              style="--node-color:${DOMAIN_COLORS[c.domains[0]||domain]}"
-              onclick="showCertPanel('${c.id}')">
-              <div class="node-code">${c.code}${aiTag}</div>
-              <div class="node-name">${c.name.length>30?c.name.substring(0,30)+'…':c.name}</div>
-              <button class="node-check" onclick="event.stopPropagation();toggleNodeProgress('${c.id}')" title="${done?'Mark incomplete':'Mark complete'}">
-                ${done?'✓':'○'}
-              </button>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-    });
-    html += '</div>';
-
-    // Summary bar
-    const total = domainCerts.length;
-    const done = domainCerts.filter(c=>progress[c.id]).length;
-    html += `<div class="pathway-summary">
-      <div class="progress-bar"><div class="progress-fill" style="width:${total?Math.round(done/total*100):0}%"></div></div>
-      <div class="progress-text">${done}/${total} completed (${total?Math.round(done/total*100):0}%)</div>
-      <button class="btn btn-outline" onclick="exportProgress()">Export Progress</button>
-    </div>`;
-
-    container.innerHTML = html;
-
-    window.toggleNodeProgress = (id) => {
-      toggleProgress(id);
-      renderPathwayGraph(domain, startLevel);
-    };
-
-    window.showCertPanel = (id) => {
-      const cert = CERTS.find(c=>c.id===id);
-      if (!cert) return;
-      const panel = document.getElementById('certSidePanel');
-      if (!panel) return;
-      panel.innerHTML = `
-        <button class="panel-close" onclick="document.getElementById('certSidePanel').classList.remove('open')">×</button>
-        <div class="panel-code">${cert.code}</div>
-        <h3 class="panel-name">${cert.name}</h3>
-        <div class="panel-issuer">${cert.issuer.toUpperCase()}</div>
-        <p class="panel-desc">${cert.description}</p>
-        <div class="panel-meta">
-          <div><strong>Level:</strong> ${levelLabel(cert.level)}</div>
-          <div><strong>Cost:</strong> $${cert.examDetails.cost}</div>
-          <div><strong>Salary:</strong> ${cert.salaryRange}</div>
-          <div><strong>Validity:</strong> ${cert.examDetails.validity}</div>
-        </div>
-        <div class="panel-skills">${cert.skills.map(s=>`<div class="skill-bar-row"><span>${s.name}</span><div class="skill-bar"><div style="width:${s.pct}%;background:${DOMAIN_COLORS[cert.domains[0]]}"></div></div></div>`).join('')}</div>
-        <a href="certification.html?id=${cert.id}" class="btn btn-primary" style="width:100%;margin-top:1rem">View Full Details →</a>`;
-      panel.classList.add('open');
-    };
-  }
-
-  window.exportProgress = () => {
-    const p = getProgress();
-    const completed = CERTS.filter(c=>p[c.id]).map(c=>c.name);
-    const text = `CyberCerts Progress Export\n${new Date().toLocaleDateString()}\n\nCompleted (${completed.length}):\n${completed.map(n=>'  ✓ '+n).join('\n')}`;
-    const blob = new Blob([text],{type:'text/plain'});
-    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='cybercerts-progress.txt'; a.click();
+  window.toggleCertProgress = function(id) {
+    var p = getProgress();
+    setProgressItem(id, !p[id]);
+    renderPathwayGraph(certs, domain, allowedLevels);
+    renderProgressDashboard();
   };
 }
 
-const LEVEL_COLORS = { 'beginner':'#00ff41','intermediate':'#ffd700','advanced':'#ff6b35','expert':'#ff3e3e','specialty':'#00f5ff' };
-const DOMAIN_COLORS = { 'blue-team':'#00ff41','red-team':'#ff3e3e','cloud':'#0080ff','grc':'#9d4edd','dfir':'#ff6b35','ai-security':'#00f5ff','ics-ot':'#ffd700','privacy':'#ff69b4','vendor':'#adb5bd','appsec':'#20c997','management':'#6c757d','threat-intel':'#fd7e14','malware':'#e83e8c' };
+function renderProgressDashboard() {
+  var container = document.getElementById('progressTrackers');
+  if (!container) return;
+  var progress = getProgress();
+  var domains = Object.keys(DOMAIN_META_P);
 
-function levelLabel(l) { return l.charAt(0).toUpperCase()+l.slice(1); }
-function domainLabel(d) { const m={'blue-team':'Blue Team','red-team':'Red Team','cloud':'Cloud','grc':'GRC','dfir':'DFIR','ai-security':'AI Security','ics-ot':'ICS/OT','privacy':'Privacy','appsec':'AppSec','management':'Management','threat-intel':'Threat Intel','malware':'Malware','vendor':'Vendor'}; return m[d]||d; }
+  container.innerHTML = domains.map(function(domain) {
+    var domCerts = CERTS.filter(function(c) { return c.domains.includes(domain); });
+    var total = domCerts.length;
+    if (!total) return '';
+    var done = domCerts.filter(function(c) { return progress[c.id]; }).length;
+    var pct = Math.round(done / total * 100);
+    var color = dColor(domain);
+    return '<div class="progress-tracker-item">'
+      + '<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem">'
+      + '<span style="font-size:0.85rem">' + dLabel(domain) + '</span>'
+      + '<span style="font-size:0.8rem;color:var(--text-secondary)">' + done + '/' + total + '</span>'
+      + '</div>'
+      + '<div style="background:var(--border-color);border-radius:4px;height:6px">'
+      + '<div style="width:' + pct + '%;background:' + color + ';border-radius:4px;height:6px;transition:width 0.3s"></div>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
 
-document.addEventListener('DOMContentLoaded', () => {
+function exportPathway(certs) {
+  var progress = getProgress();
+  var lines = ['CyberCerts – Pathway Export', new Date().toLocaleDateString(), ''];
+  certs.forEach(function(c) {
+    var status = progress[c.id] ? '✓' : '○';
+    lines.push(status + ' ' + c.code + ' – ' + c.name + ' (' + lvlLabel(c.level) + ')');
+  });
+  var blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cybercerts-pathway.txt';
+  a.click();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
   initPathwayPage();
 });

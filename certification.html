@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certification Details – CyberCerts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-mode">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><i class="fas fa-shield-halved"></i><span>CyberCerts</span></a>
+      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu"><span></span><span></span><span></span></button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="explore.html" class="nav-link">Explore</a></li>
+        <li><a href="pathway.html" class="nav-link">Pathway</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+  </nav>
+
+  <main class="cert-detail-main">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="explore.html">Explore</a></li>
+          <li aria-current="page" id="breadcrumbCert">Loading...</li>
+        </ol>
+      </nav>
+
+      <!-- Loading state -->
+      <div class="loading-state" id="loadingState">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading certification...</p>
+      </div>
+
+      <!-- Error state -->
+      <div class="error-state" id="errorState" hidden>
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Certification Not Found</h2>
+        <p>The certification you're looking for doesn't exist.</p>
+        <a href="explore.html" class="btn btn-primary">Browse All Certifications</a>
+      </div>
+
+      <!-- Cert Detail Content -->
+      <div class="cert-detail-content" id="certDetailContent" hidden>
+        <!-- Header -->
+        <div class="cert-detail-header" id="certDetailHeader">
+          <div class="cert-header-left">
+            <div class="cert-issuer-badge" id="certIssuerBadge"></div>
+            <div class="cert-header-info">
+              <div class="cert-header-meta">
+                <span class="cert-code" id="certCode"></span>
+                <span class="cert-level-badge" id="certLevelBadge"></span>
+                <span class="ai-security-badge" id="aiSecurityBadge" hidden>
+                  <i class="fas fa-robot"></i> AI Security
+                </span>
+              </div>
+              <h1 id="certName"></h1>
+              <div class="cert-domain-tags" id="certDomainTags"></div>
+            </div>
+          </div>
+          <div class="cert-header-right">
+            <div class="cert-quick-stats">
+              <div class="quick-stat">
+                <span class="quick-stat-value" id="qsCost"></span>
+                <span class="quick-stat-label">Exam Cost</span>
+              </div>
+              <div class="quick-stat">
+                <span class="quick-stat-value" id="qsValidity"></span>
+                <span class="quick-stat-label">Validity</span>
+              </div>
+              <div class="quick-stat">
+                <span class="quick-stat-value" id="qsLevel"></span>
+                <span class="quick-stat-label">Level</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="cert-tabs" role="tablist" aria-label="Certification information tabs">
+          <button class="cert-tab active" data-tab="overview" role="tab" aria-selected="true" aria-controls="tabOverview">Overview</button>
+          <button class="cert-tab" data-tab="skills" role="tab" aria-selected="false" aria-controls="tabSkills">Skills Covered</button>
+          <button class="cert-tab" data-tab="prerequisites" role="tab" aria-selected="false" aria-controls="tabPrerequisites">Prerequisites</button>
+          <button class="cert-tab" data-tab="exam" role="tab" aria-selected="false" aria-controls="tabExam">Exam Details</button>
+          <button class="cert-tab" data-tab="career" role="tab" aria-selected="false" aria-controls="tabCareer">Career Impact</button>
+          <button class="cert-tab" data-tab="resources" role="tab" aria-selected="false" aria-controls="tabResources">Study Resources</button>
+          <button class="cert-tab" data-tab="next" role="tab" aria-selected="false" aria-controls="tabNext">Next Steps</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="cert-tab-content">
+          <div class="tab-panel active" id="tabOverview" role="tabpanel">
+            <div class="tab-two-col">
+              <div>
+                <h3>About This Certification</h3>
+                <p id="tabOverviewDesc"></p>
+                <h3>Who Is It For?</h3>
+                <p id="tabOverviewWho"></p>
+              </div>
+              <div>
+                <h3>Why Get This Cert?</h3>
+                <p id="tabOverviewWhy"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tabSkills" role="tabpanel">
+            <h3>Skills &amp; Knowledge Domains</h3>
+            <div class="skills-list" id="skillsList"></div>
+          </div>
+
+          <div class="tab-panel" id="tabPrerequisites" role="tabpanel">
+            <h3>Recommended Experience</h3>
+            <p id="prereqExperience"></p>
+            <h3>Recommended Prior Certifications</h3>
+            <div class="prereq-certs" id="prereqCerts"></div>
+          </div>
+
+          <div class="tab-panel" id="tabExam" role="tabpanel">
+            <h3>Exam Information</h3>
+            <div class="exam-details-grid" id="examDetailsGrid"></div>
+          </div>
+
+          <div class="tab-panel" id="tabCareer" role="tabpanel">
+            <h3>Career Roles</h3>
+            <div class="career-roles" id="careerRoles"></div>
+            <h3>Salary Range</h3>
+            <div class="salary-display" id="salaryDisplay"></div>
+          </div>
+
+          <div class="tab-panel" id="tabResources" role="tabpanel">
+            <h3>Study Resources</h3>
+            <div class="resources-list" id="resourcesList"></div>
+          </div>
+
+          <div class="tab-panel" id="tabNext" role="tabpanel">
+            <h3>Recommended Next Certifications</h3>
+            <div class="next-certs-grid" id="nextCertsGrid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 CyberCerts. Exam details may change — always verify with the official issuer.</p>
+        <nav aria-label="Footer navigation"><a href="index.html">Home</a> · <a href="explore.html">Explore</a> · <a href="pathway.html">Pathway</a> · <a href="about.html">About</a></nav>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/certification.js"></script>
+</body>
+</html>

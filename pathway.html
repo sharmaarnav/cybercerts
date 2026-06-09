@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathway Builder – CyberCerts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-mode">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><i class="fas fa-shield-halved"></i><span>CyberCerts</span></a>
+      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu"><span></span><span></span><span></span></button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="explore.html" class="nav-link">Explore</a></li>
+        <li><a href="pathway.html" class="nav-link active">Pathway</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+  </nav>
+
+  <main class="pathway-main">
+    <div class="container">
+      <div class="page-header reveal">
+        <h1>Pathway Builder</h1>
+        <p>Build your personalized certification roadmap</p>
+      </div>
+
+      <!-- Wizard -->
+      <div class="wizard-card reveal">
+        <div class="wizard-steps" role="list" aria-label="Wizard steps">
+          <div class="wizard-step active" data-step="1" role="listitem">
+            <span class="wizard-step-num">1</span>
+            <span class="wizard-step-label">Experience</span>
+          </div>
+          <div class="wizard-step" data-step="2" role="listitem">
+            <span class="wizard-step-num">2</span>
+            <span class="wizard-step-label">Domain</span>
+          </div>
+          <div class="wizard-step" data-step="3" role="listitem">
+            <span class="wizard-step-num">3</span>
+            <span class="wizard-step-label">Provider</span>
+          </div>
+        </div>
+
+        <div class="wizard-panel active" id="wizardPanel1">
+          <h3>What is your current experience level?</h3>
+          <div class="option-grid">
+            <button class="option-btn" data-value="student" aria-label="Student">
+              <i class="fas fa-graduation-cap"></i><span>Student / No Experience</span>
+            </button>
+            <button class="option-btn" data-value="beginner" aria-label="IT Beginner">
+              <i class="fas fa-seedling"></i><span>IT Beginner (0–1 yr)</span>
+            </button>
+            <button class="option-btn" data-value="professional" aria-label="IT Professional">
+              <i class="fas fa-laptop-code"></i><span>IT Professional (2–4 yr)</span>
+            </button>
+            <button class="option-btn" data-value="senior" aria-label="Senior IT">
+              <i class="fas fa-user-tie"></i><span>Senior IT (5+ yr)</span>
+            </button>
+            <button class="option-btn" data-value="specialist" aria-label="Security Specialist">
+              <i class="fas fa-shield-alt"></i><span>Security Specialist</span>
+            </button>
+            <button class="option-btn" data-value="executive" aria-label="Manager/Executive">
+              <i class="fas fa-briefcase"></i><span>Manager / Executive</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="wizard-panel" id="wizardPanel2">
+          <h3>Which security domain interests you?</h3>
+          <div class="option-grid domain-grid">
+            <button class="option-btn" data-value="blue-team"><i class="fas fa-shield-alt" style="color:#00ff41"></i><span>Blue Team / SOC</span></button>
+            <button class="option-btn" data-value="red-team"><i class="fas fa-user-secret" style="color:#ff3e3e"></i><span>Penetration Testing</span></button>
+            <button class="option-btn" data-value="cloud"><i class="fas fa-cloud" style="color:#0080ff"></i><span>Cloud Security</span></button>
+            <button class="option-btn" data-value="dfir"><i class="fas fa-magnifying-glass" style="color:#ff6b35"></i><span>Digital Forensics</span></button>
+            <button class="option-btn" data-value="grc"><i class="fas fa-balance-scale" style="color:#9d4edd"></i><span>GRC / Compliance</span></button>
+            <button class="option-btn" data-value="appsec"><i class="fas fa-code" style="color:#0080ff"></i><span>AppSec</span></button>
+            <button class="option-btn" data-value="privacy"><i class="fas fa-lock" style="color:#ff69b4"></i><span>Privacy</span></button>
+            <button class="option-btn" data-value="ics-ot"><i class="fas fa-industry" style="color:#ffd700"></i><span>ICS / OT</span></button>
+            <button class="option-btn" data-value="management"><i class="fas fa-sitemap" style="color:#20c997"></i><span>Management</span></button>
+            <button class="option-btn" data-value="threat-intel"><i class="fas fa-crosshairs" style="color:#20c997"></i><span>Threat Intelligence</span></button>
+            <button class="option-btn" data-value="ai-security"><i class="fas fa-robot" style="color:#00f5ff"></i><span>AI Security <span class="new-badge">NEW</span></span></button>
+            <button class="option-btn" data-value="vendor"><i class="fas fa-server" style="color:#adb5bd"></i><span>Vendor-Specific</span></button>
+          </div>
+        </div>
+
+        <div class="wizard-panel" id="wizardPanel3">
+          <h3>Any provider preference? <span class="optional">(Optional)</span></h3>
+          <div class="option-grid provider-grid">
+            <button class="option-btn selected" data-value="all">All</button>
+            <button class="option-btn" data-value="isc2">ISC2</button>
+            <button class="option-btn" data-value="isaca">ISACA</button>
+            <button class="option-btn" data-value="comptia">CompTIA</button>
+            <button class="option-btn" data-value="microsoft">Microsoft</button>
+            <button class="option-btn" data-value="aws">AWS</button>
+            <button class="option-btn" data-value="gcp">Google Cloud</button>
+            <button class="option-btn" data-value="cisco">Cisco</button>
+            <button class="option-btn" data-value="giac">GIAC/SANS</button>
+            <button class="option-btn" data-value="offsec">OffSec</button>
+          </div>
+        </div>
+
+        <div class="wizard-footer">
+          <button class="btn btn-ghost" id="wizardPrevBtn" style="display:none" aria-label="Back">
+            <i class="fas fa-arrow-left"></i> Back
+          </button>
+          <button class="btn btn-primary" id="wizardNextBtn" aria-label="Next step">
+            Next <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Dashboard -->
+      <div class="progress-dashboard reveal" id="progressDashboard">
+        <h2>Your Progress Dashboard</h2>
+        <p>Track your certification journey across all pathways</p>
+        <div id="progressTrackers"></div>
+      </div>
+
+      <!-- Pathway Display -->
+      <div class="pathway-display" id="pathwayDisplay" hidden>
+        <div class="pathway-display-header">
+          <h2 id="pathwayTitle">Your Recommended Pathway</h2>
+          <div class="pathway-display-actions">
+            <button class="btn btn-ghost btn-sm" id="exportPathway" aria-label="Export pathway as text">
+              <i class="fas fa-download"></i> Export
+            </button>
+            <button class="btn btn-ghost btn-sm" id="resetPathway" aria-label="Start over">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Visual pathway graph -->
+        <div class="pathway-graph" id="pathwayGraph" role="list" aria-label="Certification pathway steps">
+          <!-- Cert nodes rendered by JS -->
+        </div>
+
+        <!-- Cert detail panel (slide-in) -->
+        <aside class="cert-panel" id="certPanel" aria-label="Certification details" hidden>
+          <button class="cert-panel-close" id="closeCertPanel" aria-label="Close panel">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="cert-panel-content" id="certPanelContent"></div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 CyberCerts. Exam details may change — always verify with the official issuer.</p>
+        <nav aria-label="Footer navigation"><a href="index.html">Home</a> · <a href="explore.html">Explore</a> · <a href="pathway.html">Pathway</a> · <a href="about.html">About</a></nav>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pathway.js"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberCerts – Your Cybersecurity Certification Roadmap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-mode">
+  <!-- Navigation -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="CyberCerts Home">
+        <i class="fas fa-shield-halved" aria-hidden="true"></i>
+        <span>CyberCerts</span>
+      </a>
+      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="nav-menu" role="list">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="explore.html" class="nav-link">Explore</a></li>
+        <li><a href="pathway.html" class="nav-link">Pathway</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="Toggle dark/light mode" id="themeToggle">
+        <i class="fas fa-moon" aria-hidden="true"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section with particle canvas -->
+  <section class="hero" id="hero">
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content reveal">
+      <div class="hero-badge">
+        <i class="fas fa-certificate" aria-hidden="true"></i>
+        <span>AI Security Certs Now Included</span>
+      </div>
+      <h1 class="hero-title">Your Cybersecurity<br><span class="gradient-text">Certification Roadmap</span></h1>
+      <p class="hero-subtitle">Navigate 200+ certifications across every security domain. Get a personalized path based on your experience and goals.</p>
+      <div class="hero-cta">
+        <a href="#finder" class="btn btn-primary" aria-label="Find your certification path">
+          <i class="fas fa-compass" aria-hidden="true"></i> Find Your Path
+        </a>
+        <a href="explore.html" class="btn btn-secondary" aria-label="Browse all certifications">
+          <i class="fas fa-search" aria-hidden="true"></i> Browse All Certs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="stats-bar" aria-label="Site statistics">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number" id="totalCerts">205</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="totalIssuers">30+</span>
+          <span class="stat-label">Issuing Bodies</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">13</span>
+          <span class="stat-label">Security Domains</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number ai-color">7</span>
+          <span class="stat-label">AI Security Certs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cert Finder / 3-Step Selector -->
+  <section class="finder-section" id="finder" aria-label="Certification finder">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Find Your Perfect Certification</h2>
+        <p>Answer 3 quick questions to get personalized recommendations</p>
+      </div>
+
+      <div class="finder-card reveal">
+        <!-- Step 1: Experience -->
+        <div class="finder-step active" id="step1">
+          <div class="step-header">
+            <span class="step-number">01</span>
+            <h3>What's your experience level?</h3>
+          </div>
+          <div class="option-grid" role="group" aria-label="Experience level options">
+            <button class="option-btn" data-value="student" aria-label="Student or No Experience">
+              <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+              <span>Student / No Experience</span>
+            </button>
+            <button class="option-btn" data-value="beginner" aria-label="IT Beginner 0-1 year">
+              <i class="fas fa-seedling" aria-hidden="true"></i>
+              <span>IT Beginner (0–1 yr)</span>
+            </button>
+            <button class="option-btn" data-value="professional" aria-label="IT Professional 2-4 years">
+              <i class="fas fa-laptop-code" aria-hidden="true"></i>
+              <span>IT Professional (2–4 yr)</span>
+            </button>
+            <button class="option-btn" data-value="senior" aria-label="Senior IT 5 plus years">
+              <i class="fas fa-user-tie" aria-hidden="true"></i>
+              <span>Senior IT (5+ yr)</span>
+            </button>
+            <button class="option-btn" data-value="specialist" aria-label="Security Specialist">
+              <i class="fas fa-shield-alt" aria-hidden="true"></i>
+              <span>Security Specialist</span>
+            </button>
+            <button class="option-btn" data-value="executive" aria-label="Manager or Executive">
+              <i class="fas fa-briefcase" aria-hidden="true"></i>
+              <span>Manager / Executive</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Domain -->
+        <div class="finder-step" id="step2">
+          <div class="step-header">
+            <span class="step-number">02</span>
+            <h3>What's your target domain?</h3>
+          </div>
+          <div class="option-grid domain-grid" role="group" aria-label="Security domain options">
+            <button class="option-btn domain-btn" data-value="blue-team" aria-label="Blue Team SOC">
+              <i class="fas fa-shield-alt" style="color:#00ff41" aria-hidden="true"></i>
+              <span>Blue Team / SOC</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="red-team" aria-label="Penetration Testing">
+              <i class="fas fa-user-secret" style="color:#ff3e3e" aria-hidden="true"></i>
+              <span>Penetration Testing</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="cloud" aria-label="Cloud Security">
+              <i class="fas fa-cloud" style="color:#0080ff" aria-hidden="true"></i>
+              <span>Cloud Security</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="dfir" aria-label="Digital Forensics">
+              <i class="fas fa-magnifying-glass" style="color:#ff6b35" aria-hidden="true"></i>
+              <span>Digital Forensics</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="grc" aria-label="GRC Compliance">
+              <i class="fas fa-balance-scale" style="color:#9d4edd" aria-hidden="true"></i>
+              <span>GRC / Compliance</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="appsec" aria-label="Application Security">
+              <i class="fas fa-code" style="color:#0080ff" aria-hidden="true"></i>
+              <span>AppSec</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="privacy" aria-label="Privacy Data Protection">
+              <i class="fas fa-lock" style="color:#ff69b4" aria-hidden="true"></i>
+              <span>Privacy / Data Protection</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="ics-ot" aria-label="ICS OT SCADA">
+              <i class="fas fa-industry" style="color:#ffd700" aria-hidden="true"></i>
+              <span>ICS / OT / SCADA</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="management" aria-label="Management Executive">
+              <i class="fas fa-sitemap" style="color:#20c997" aria-hidden="true"></i>
+              <span>Management / Executive</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="threat-intel" aria-label="Threat Intelligence">
+              <i class="fas fa-crosshairs" style="color:#20c997" aria-hidden="true"></i>
+              <span>Threat Intelligence</span>
+            </button>
+            <button class="option-btn domain-btn" data-value="malware" aria-label="Malware Analysis">
+              <i class="fas fa-bug" style="color:#ff3e3e" aria-hidden="true"></i>
+              <span>Malware Analysis</span>
+            </button>
+            <button class="option-btn domain-btn ai-domain-btn" data-value="ai-security" aria-label="AI Security - New">
+              <i class="fas fa-robot" style="color:#00f5ff" aria-hidden="true"></i>
+              <span>AI Security <span class="new-badge">NEW</span></span>
+            </button>
+            <button class="option-btn domain-btn" data-value="vendor" aria-label="Vendor Specific">
+              <i class="fas fa-server" style="color:#adb5bd" aria-hidden="true"></i>
+              <span>Vendor-Specific</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Provider preference -->
+        <div class="finder-step" id="step3">
+          <div class="step-header">
+            <span class="step-number">03</span>
+            <h3>Any provider preference? <span class="optional">(Optional)</span></h3>
+          </div>
+          <div class="option-grid provider-grid" role="group" aria-label="Provider preference options">
+            <button class="option-btn selected" data-value="all" aria-label="All providers" aria-pressed="true">All</button>
+            <button class="option-btn" data-value="isc2" aria-label="ISC2">ISC2</button>
+            <button class="option-btn" data-value="isaca" aria-label="ISACA">ISACA</button>
+            <button class="option-btn" data-value="comptia" aria-label="CompTIA">CompTIA</button>
+            <button class="option-btn" data-value="microsoft" aria-label="Microsoft Azure">Microsoft/Azure</button>
+            <button class="option-btn" data-value="aws" aria-label="AWS">AWS</button>
+            <button class="option-btn" data-value="gcp" aria-label="Google Cloud">Google Cloud</button>
+            <button class="option-btn" data-value="cisco" aria-label="Cisco">Cisco</button>
+            <button class="option-btn" data-value="paloalto" aria-label="Palo Alto">Palo Alto</button>
+            <button class="option-btn" data-value="fortinet" aria-label="Fortinet">Fortinet</button>
+            <button class="option-btn" data-value="checkpoint" aria-label="Check Point">Check Point</button>
+            <button class="option-btn" data-value="splunk" aria-label="Splunk">Splunk</button>
+            <button class="option-btn" data-value="crowdstrike" aria-label="CrowdStrike">CrowdStrike</button>
+            <button class="option-btn" data-value="eccouncil" aria-label="EC-Council">EC-Council</button>
+            <button class="option-btn" data-value="giac" aria-label="GIAC SANS">GIAC/SANS</button>
+            <button class="option-btn" data-value="offsec" aria-label="OffSec">OffSec</button>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="finder-results" id="finderResults" aria-live="polite">
+          <div class="section-header">
+            <h3>Recommended Starting Points</h3>
+            <p id="resultsSubtext">Based on your selections</p>
+          </div>
+          <div class="results-grid" id="resultsGrid"></div>
+          <div class="results-cta">
+            <a href="pathway.html" class="btn btn-primary" id="startJourneyBtn">
+              <i class="fas fa-route" aria-hidden="true"></i> View Full Pathway
+            </a>
+          </div>
+        </div>
+
+        <!-- Step indicators / navigation -->
+        <div class="finder-nav">
+          <div class="step-indicators" role="tablist" aria-label="Form steps">
+            <button class="step-dot active" data-step="1" role="tab" aria-selected="true" aria-label="Step 1: Experience"></button>
+            <button class="step-dot" data-step="2" role="tab" aria-selected="false" aria-label="Step 2: Domain"></button>
+            <button class="step-dot" data-step="3" role="tab" aria-selected="false" aria-label="Step 3: Provider"></button>
+          </div>
+          <div class="step-nav-btns">
+            <button class="btn btn-ghost" id="prevStepBtn" aria-label="Previous step" disabled>
+              <i class="fas fa-arrow-left" aria-hidden="true"></i> Back
+            </button>
+            <button class="btn btn-primary" id="nextStepBtn" aria-label="Next step">
+              Next <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Pathways -->
+  <section class="pathways-section" aria-label="Featured certification pathways">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Featured Pathways</h2>
+        <p>Curated certification journeys for every career goal</p>
+      </div>
+      <div class="pathways-grid">
+        <a href="pathway.html?domain=blue-team&exp=student" class="pathway-card reveal" aria-label="SOC Analyst Path">
+          <div class="pathway-icon" style="--domain-color:#00ff41">
+            <i class="fas fa-desktop" aria-hidden="true"></i>
+          </div>
+          <h3>SOC Analyst Path</h3>
+          <p>From CC to CySA+ to Microsoft Sentinel</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#00ff41">Blue Team</span>
+            <span class="tag">4-6 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=red-team&exp=student" class="pathway-card reveal" aria-label="Pen Tester Path">
+          <div class="pathway-icon" style="--domain-color:#ff3e3e">
+            <i class="fas fa-terminal" aria-hidden="true"></i>
+          </div>
+          <h3>Pen Tester Path</h3>
+          <p>From eJPT to PNPT to OSCP and beyond</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#ff3e3e">Red Team</span>
+            <span class="tag">4-5 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=cloud&exp=professional" class="pathway-card reveal" aria-label="Cloud Security Path">
+          <div class="pathway-icon" style="--domain-color:#0080ff">
+            <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+          </div>
+          <h3>Cloud Security Path</h3>
+          <p>CCSK → AZ-500 → CCSP → SC-100</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#0080ff">Cloud</span>
+            <span class="tag">4 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=grc&exp=senior" class="pathway-card reveal" aria-label="GRC Path">
+          <div class="pathway-icon" style="--domain-color:#9d4edd">
+            <i class="fas fa-clipboard-check" aria-hidden="true"></i>
+          </div>
+          <h3>GRC Path</h3>
+          <p>CISSP → CISM → ISO 27001 LA → CRISC</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#9d4edd">GRC</span>
+            <span class="tag">4 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=dfir&exp=professional" class="pathway-card reveal" aria-label="DFIR Path">
+          <div class="pathway-icon" style="--domain-color:#ff6b35">
+            <i class="fas fa-search-plus" aria-hidden="true"></i>
+          </div>
+          <h3>DFIR Path</h3>
+          <p>DFE → Security+ → GCFE → GCFA → GCFR</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#ff6b35">Forensics</span>
+            <span class="tag">5 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=red-team&exp=specialist" class="pathway-card reveal" aria-label="Red Team Path">
+          <div class="pathway-icon" style="--domain-color:#ff3e3e">
+            <i class="fas fa-skull-crossbones" aria-hidden="true"></i>
+          </div>
+          <h3>Red Team Path</h3>
+          <p>CEH → PNPT → OSCP → OSEP → CRTO</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#ff3e3e">Red Team</span>
+            <span class="tag">5 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=privacy&exp=professional" class="pathway-card reveal" aria-label="Privacy Path">
+          <div class="pathway-icon" style="--domain-color:#ff69b4">
+            <i class="fas fa-user-shield" aria-hidden="true"></i>
+          </div>
+          <h3>Privacy Path</h3>
+          <p>CDPSE → CIPP/E → CIPM → CIPT</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#ff69b4">Privacy</span>
+            <span class="tag">4 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=ics-ot&exp=professional" class="pathway-card reveal" aria-label="ICS Security Path">
+          <div class="pathway-icon" style="--domain-color:#ffd700">
+            <i class="fas fa-industry" aria-hidden="true"></i>
+          </div>
+          <h3>ICS Security Path</h3>
+          <p>Security+ → GICSP → GRID → GCIP</p>
+          <div class="pathway-tags">
+            <span class="tag" style="--tag-color:#ffd700">ICS/OT</span>
+            <span class="tag">4 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a href="pathway.html?domain=ai-security&exp=professional" class="pathway-card reveal ai-pathway-card" aria-label="AI Security Path - New">
+          <div class="pathway-icon ai-glow" style="--domain-color:#00f5ff">
+            <i class="fas fa-robot" aria-hidden="true"></i>
+          </div>
+          <h3>AI Security Path <span class="new-badge">NEW</span></h3>
+          <p>Security+ → SecAI+ → GAIPS → CAISP → GAISP</p>
+          <div class="pathway-tags">
+            <span class="tag ai-tag" style="--tag-color:#00f5ff">AI Security</span>
+            <span class="tag">5 certs</span>
+          </div>
+          <span class="pathway-arrow"><i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo"><i class="fas fa-shield-halved"></i> CyberCerts</a>
+          <p>Your comprehensive guide to cybersecurity certifications.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Pages</h4>
+          <ul>
+            <li><a href="explore.html">Browse Certifications</a></li>
+            <li><a href="pathway.html">Build Your Pathway</a></li>
+            <li><a href="about.html">About &amp; FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Domains</h4>
+          <ul>
+            <li><a href="explore.html?domain=blue-team">Blue Team / SOC</a></li>
+            <li><a href="explore.html?domain=red-team">Penetration Testing</a></li>
+            <li><a href="explore.html?domain=ai-security">AI Security</a></li>
+            <li><a href="explore.html?domain=cloud">Cloud Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 CyberCerts. Exam details may change — always verify with the official issuer.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

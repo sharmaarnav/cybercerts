@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Certifications – CyberCerts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-mode">
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo"><i class="fas fa-shield-halved"></i><span>CyberCerts</span></a>
+      <button class="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu"><span></span><span></span><span></span></button>
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="explore.html" class="nav-link active">Explore</a></li>
+        <li><a href="pathway.html" class="nav-link">Pathway</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+      </ul>
+      <button class="theme-toggle" aria-label="Toggle theme" id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+  </nav>
+
+  <main class="explore-main">
+    <div class="container">
+      <div class="page-header reveal">
+        <h1>Explore Certifications</h1>
+        <p>Browse all <span id="totalCount">205</span> cybersecurity certifications</p>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar reveal" role="search" aria-label="Filter certifications">
+        <div class="search-input-wrap">
+          <i class="fas fa-search" aria-hidden="true"></i>
+          <input type="text" id="searchInput" placeholder="Search certifications..." aria-label="Search certifications">
+        </div>
+        <select id="issuerFilter" aria-label="Filter by issuer">
+          <option value="">All Issuers</option>
+          <option value="isc2">ISC2</option>
+          <option value="isaca">ISACA</option>
+          <option value="comptia">CompTIA</option>
+          <option value="eccouncil">EC-Council</option>
+          <option value="offsec">OffSec</option>
+          <option value="giac">GIAC/SANS</option>
+          <option value="microsoft">Microsoft</option>
+          <option value="aws">AWS</option>
+          <option value="gcp">Google Cloud</option>
+          <option value="cisco">Cisco</option>
+          <option value="paloalto">Palo Alto</option>
+          <option value="fortinet">Fortinet</option>
+          <option value="checkpoint">Check Point</option>
+          <option value="crowdstrike">CrowdStrike</option>
+          <option value="splunk">Splunk</option>
+          <option value="ine">INE/eLearnSecurity</option>
+          <option value="tcm">TCM Security</option>
+          <option value="htb">Hack The Box</option>
+          <option value="iapp">IAPP</option>
+          <option value="csa">CSA</option>
+          <option value="practical-devsecops">Practical DevSecOps</option>
+        </select>
+        <select id="levelFilter" aria-label="Filter by level">
+          <option value="">All Levels</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+          <option value="expert">Expert</option>
+          <option value="specialty">Specialty</option>
+        </select>
+        <select id="domainFilter" aria-label="Filter by domain">
+          <option value="">All Domains</option>
+          <option value="blue-team">Blue Team / SOC</option>
+          <option value="red-team">Penetration Testing</option>
+          <option value="cloud">Cloud Security</option>
+          <option value="grc">GRC / Compliance</option>
+          <option value="dfir">Digital Forensics</option>
+          <option value="appsec">AppSec</option>
+          <option value="privacy">Privacy</option>
+          <option value="ics-ot">ICS / OT</option>
+          <option value="management">Management</option>
+          <option value="threat-intel">Threat Intelligence</option>
+          <option value="malware">Malware Analysis</option>
+          <option value="ai-security">AI Security</option>
+          <option value="vendor">Vendor-Specific</option>
+        </select>
+        <button class="btn btn-ghost btn-sm" id="clearFilters" aria-label="Clear all filters">
+          <i class="fas fa-times" aria-hidden="true"></i> Clear
+        </button>
+      </div>
+
+      <!-- Compare bar -->
+      <div class="compare-bar" id="compareBar" aria-label="Compare selected certifications" hidden>
+        <span id="compareCount">0 selected</span>
+        <button class="btn btn-primary btn-sm" id="compareBtn" aria-label="Compare selected certifications" disabled>
+          <i class="fas fa-columns" aria-hidden="true"></i> Compare
+        </button>
+        <button class="btn btn-ghost btn-sm" id="clearCompare" aria-label="Clear selection">Clear</button>
+      </div>
+
+      <!-- Results count -->
+      <div class="results-meta">
+        <span id="resultsCount">205 certifications</span>
+        <label class="compare-hint" for="compareHint">
+          <i class="fas fa-info-circle" aria-hidden="true"></i> Select 2 certs to compare
+        </label>
+      </div>
+
+      <!-- Cert Cards Grid -->
+      <div class="certs-grid" id="certsGrid" role="list" aria-label="Certification cards">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState" hidden>
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <h3>No certifications found</h3>
+        <p>Try adjusting your filters or search terms</p>
+        <button class="btn btn-primary" id="resetFilters">Reset Filters</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Compare Modal -->
+  <div class="modal-overlay" id="compareModal" role="dialog" aria-modal="true" aria-label="Compare certifications" hidden>
+    <div class="modal-content compare-modal-content">
+      <button class="modal-close" id="closeCompareModal" aria-label="Close modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+      <h2>Certification Comparison</h2>
+      <div class="compare-table-wrap">
+        <table class="compare-table" id="compareTable" aria-label="Side by side certification comparison">
+          <thead><tr id="compareHead"></tr></thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 CyberCerts. Exam details may change — always verify with the official issuer.</p>
+        <nav aria-label="Footer navigation"><a href="index.html">Home</a> · <a href="explore.html">Explore</a> · <a href="pathway.html">Pathway</a> · <a href="about.html">About</a></nav>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

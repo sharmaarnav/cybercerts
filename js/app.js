@@ -119,6 +119,14 @@ function initNav() {
    Scroll Reveal
    ============================================================ */
 function initScrollReveal() {
+  var els = document.querySelectorAll('.reveal:not(.visible)');
+  // Immediately reveal elements already in viewport
+  els.forEach(function(el) {
+    var r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight && r.bottom > 0) {
+      el.classList.add('visible');
+    }
+  });
   var obs = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
       if (e.isIntersecting) {

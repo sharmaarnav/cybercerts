@@ -436,8 +436,19 @@ h5 { font-size: 1rem; }
   min-height: calc(100vh - var(--nav-height));
   display: flex;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
   background: var(--bg-primary);
+}
+/* Canvas must not participate in flex layout */
+.hero > canvas {
+  position: absolute !important;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  flex: none;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .hero-bg {
@@ -448,10 +459,12 @@ h5 { font-size: 1rem; }
 }
 
 /* Particle canvas */
-#particle-canvas {
+#particle-canvas,
+#particles-canvas {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 0;
 }
 
 /* Grid overlay */
@@ -2415,12 +2428,19 @@ h5 { font-size: 1rem; }
 .step-dot {
   width: 10px;
   height: 10px;
+  min-width: 10px;
   border-radius: 50%;
   background: var(--border-color);
   border: none;
   padding: 0;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
 }
 .step-dot.active {
   background: var(--accent-primary);

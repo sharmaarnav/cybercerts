@@ -38,13 +38,11 @@ function certCardHtml(cert) {
   const desc = raw.length > 110 ? raw.substring(0, 110) + '…' : raw;
   const cost = cert.examDetails ? cert.examDetails.cost : '?';
 
-  return '<article class="cert-card reveal" style="--card-accent:' + accent + '"'
-    + ' onclick="location.href=\'certification.html?id=' + cert.id + '\'"'
-    + ' role="listitem" tabindex="0"'
-    + ' onkeydown="if(event.key===\'Enter\')location.href=\'certification.html?id=' + cert.id + '\'"'
-    + ' aria-label="' + cert.name + '">'
+  return '<a class="cert-card reveal" href="certification.html?id=' + cert.id + '"'
+    + ' style="--card-accent:' + accent + ';display:flex;flex-direction:column;gap:0.75rem;text-decoration:none;color:inherit"'
+    + ' role="listitem" aria-label="' + cert.name + '">'
     + '<input type="checkbox" class="cert-card-compare" data-id="' + cert.id + '"'
-    + ' aria-label="Select for comparison" onclick="event.stopPropagation()">'
+    + ' aria-label="Select for comparison" onclick="event.preventDefault();event.stopPropagation()">'
     + '<div class="cert-card-header">'
     + '<span class="cert-code">' + cert.code + '</span>'
     + '<span class="cert-issuer-badge" style="background:' + accent + '22;color:' + accent + ';border:1px solid ' + accent + '44">' + issuerUC + '</span>'
@@ -58,10 +56,9 @@ function certCardHtml(cert) {
     + '</div>'
     + '<div class="cert-card-footer">'
     + '<span class="cert-cost">$' + cost + '</span>'
-    + '<a href="certification.html?id=' + cert.id + '" class="btn btn-ghost btn-sm"'
-    + ' onclick="event.stopPropagation()">Details &rarr;</a>'
+    + '<span class="btn btn-ghost btn-sm">Details &rarr;</span>'
     + '</div>'
-    + '</article>';
+    + '</a>';
 }
 
 /* ============================================================

@@ -665,7 +665,8 @@ h5 { font-size: 1rem; }
   padding: 1rem 0;
 }
 
-.stats-bar .container {
+.stats-bar .container,
+.stats-bar-inner {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -440,6 +440,12 @@ h5 { font-size: 1rem; }
   overflow: hidden;
   background: var(--bg-primary);
 }
+
+@media (min-width: 769px) {
+  .hero {
+    min-height: 70vh;
+  }
+}
 /* Canvas must not participate in flex layout */
 .hero > canvas {
   position: absolute !important;
@@ -1275,6 +1281,63 @@ h5 { font-size: 1rem; }
 .wizard-panel.active {
   display: block;
 }
+
+/* ========== FINDER (home page 3-step wizard) ========== */
+.finder-section { padding: 3rem 0 4rem; }
+
+@media (min-width: 769px) {
+  .finder-section { padding: 2.5rem 0 3rem; }
+  .finder-card { padding: 1.5rem 2rem; }
+  .option-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.5rem; }
+  .option-btn { padding: 0.65rem 0.75rem; font-size: 0.85rem; }
+}
+
+.finder-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+}
+
+.finder-step { display: none; }
+.finder-step.active { display: block; }
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: #000;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-header h3 { font-size: 1.2rem; margin: 0; }
+.optional { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+
+/* Results hidden until .active added by JS */
+.finder-results { display: none; margin-top: 1.5rem; }
+.finder-results.active { display: block; }
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.results-cta { margin-top: 1rem; }
 
 .option-grid {
   display: grid;
